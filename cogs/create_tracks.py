@@ -139,39 +139,45 @@ class create_track(commands.Cog):
         new_data = fetch_data()
         global coords
         while True:
+
+            await asyncio.sleep(5)
+
             channel = self.client.get_channel(int(WARNING_CHANNEL_ID))
 
             coords = []
 
-            await asyncio.sleep(5)
+            try:
 
-            old_data = new_data
+                old_data = new_data
 
-            new_data = fetch_data()
+                new_data = fetch_data()
 
-            ERROR_ID = []
+                ERROR_ID = []
 
-            for train_new, train_old in zip(new_data[0]['trains'], old_data[0]['trains']):
+                for train_new, train_old in zip(new_data[0]['trains'], old_data[0]['trains']):
 
-                if train_new['cars'][0]['leading']['location'] == train_old['cars'][0]['leading']['location'] and \
-                        train_new['stopped'] != True:
-                    ERROR_ID.append(train_new['id'])
+                    if train_new['cars'][0]['leading']['location'] == train_old['cars'][0]['leading']['location'] and \
+                            train_new['stopped'] != True:
+                        ERROR_ID.append(train_new['id'])
 
-            TRAIN_DATA, TRACK_DATA = new_data
+                TRAIN_DATA, TRACK_DATA = new_data
 
-            plot_map(TRAIN_DATA, TRACK_DATA, ERROR_ID)
+                plot_map(TRAIN_DATA, TRACK_DATA, ERROR_ID)
 
-            text = "WARNING!\nCOLLISION DETECTED AT"
+                text = "WARNING!\nCOLLISION DETECTED AT"
 
-            for coord in coords:
-                text += f"\n{coord}"
+                for coord in coords:
+                    text += f"\n{coord}"
 
-            if len(ERROR_ID) > 0:
-                with open("MAP.png", "rb") as f:
-                    await channel.send(files=[discord.File(f)], delete_after=60)
-                    await channel.send(text, delete_after=60)
-                os.remove("MAP.png")
-                await asyncio.sleep(55)
+                if len(ERROR_ID) > 0:
+                    with open("MAP.png", "rb") as f:
+                        await channel.send(files=[discord.File(f)], delete_after=60)
+                        await channel.send(text, delete_after=60)
+                    os.remove("MAP.png")
+                    await asyncio.sleep(55)
+
+            except Exception as e:
+                print(e)
 
 
 def setup(bot):
