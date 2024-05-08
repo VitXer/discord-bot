@@ -21,17 +21,13 @@ def get_spotify_playlist_tracks(playlist_or_album_or_track_url):
     client_id = os.getenv("SPOTIFY")
     client_secret = os.getenv("SPOTIFY_SECRET")
 
-    # Inicjujemy uwierzytelnienie za pomocą kluczy klienta
     client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
     sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    # Sprawdzamy, czy link ma prefiks "playlist", "album" lub "track"
     if "playlist" in playlist_or_album_or_track_url:
         playlist_id = playlist_or_album_or_track_url.split('/')[-1].split('?')[0]
         results = sp.playlist_tracks(playlist_id)
-        # Tworzymy pustą listę na wyniki
         tracks_list = []
-        # Iterujemy po wszystkich utworach i wyciągamy tytuł oraz twórcę
         for track in results['items']:
             track_info = track['track']
             artist = track_info['artists'][0]['name']
@@ -52,10 +48,8 @@ def get_spotify_playlist_tracks(playlist_or_album_or_track_url):
         print("Niepoprawny link. Wprowadź link do playlisty, albumu lub pojedynczego utworu.")
         return []
 
-    # Tworzymy pustą listę na wyniki
     tracks_list = []
 
-    # Iterujemy po wszystkich utworach i wyciągamy tytuł oraz twórcę
     for track in results['items']:
         artist = track['artists'][0]['name']
         title = track['name']
@@ -66,8 +60,8 @@ def get_spotify_playlist_tracks(playlist_or_album_or_track_url):
 
 def search_and_get_link(search_query):
     ydl_opts = {
-        'extract_flat': True,  # Zwracamy tylko proste wyniki (bez zagnieżdżonych list)
-        'force_generic_extractor': True,  # Wymuszamy użycie ogólnego ekstraktora
+        'extract_flat': True,
+        'force_generic_extractor': True,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -84,10 +78,9 @@ def search_and_get_link(search_query):
 
 def get_links(playlist_url):
     ydl_opts = {
-        'quiet': True,  # Wyłącza wydruk na konsolę
-        'extract_flat': True,  # Wydobywa tylko linki do pojedynczych filmów, pomija playlisty
+        'quiet': True,
+        'extract_flat': True,
         'force_generic_extractor': True,
-        # Ustawienie na True, aby używać domyślnego ekstraktora, który obsługuje playlisty
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -202,30 +195,6 @@ async def download_video(links, ctx, id, speed):
 
             with YoutubeDL(args) as ydl:
                 ydl.download(link)
-
-            # try:
-            #
-            #     input_path = f"servers/{id}/tempo{task_id}.webm.mkv"
-            #
-            #     if output_path.endswith(".webm"):
-            #         os.rename(input_path, output_path)
-            #     else:
-            #         ffmpeg = FFmpeg().input(input_path).output(output_path, y='-y')
-            #         task = asyncio.create_task(ffmpeg.execute())
-            #         # os.system(f'ffmpeg -y -i "{input_path}" "{output_path}"')
-            #         await task
-            #         os.remove(input_path)
-            # except Exception as e:
-            #     print(e)
-            #     input_path = f"servers/{id}/tempo{task_id}.webm"
-            #     if output_path.endswith(".webm"):
-            #         os.rename(input_path, output_path)
-            #     else:
-            #         ffmpeg = FFmpeg().input(input_path).output(output_path, y='-y')
-            #         task = asyncio.create_task(ffmpeg.execute())
-            #         # os.system(f'ffmpeg -y -i "{input_path}" "{output_path}"')
-            #         await task
-            #         os.remove(input_path)
 
             if speed and 0.1 <= speed <= 10000:
                 os.rename(f'servers/{id}/song{task_id}.mp3', f'servers/{id}/songplay{task_id}.mp3')
