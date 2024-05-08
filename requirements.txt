@@ -1,3 +1,8 @@
 py-cord
 python-dotenv
 googletrans==3.1.0a0
+yt-dlp
+spotipy
+python-ffmpeg
+pydub
+PyNaCl

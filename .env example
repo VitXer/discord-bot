@@ -1,3 +1,5 @@
 TOKEN=token
 MAINTENANCE=NO
 OWNER_ID=userid
+SPOTIFY=spotify token
+SPOTIFY_SECRET=spotify token
