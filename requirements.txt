@@ -6,3 +6,4 @@ spotipy
 python-ffmpeg
 pydub
 PyNaCl
+pillow
