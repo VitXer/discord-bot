@@ -141,6 +141,8 @@ class create_track(commands.Cog):
         while True:
             channel = self.client.get_channel(int(WARNING_CHANNEL_ID))
 
+            coords = []
+
             await asyncio.sleep(5)
 
             old_data = new_data
