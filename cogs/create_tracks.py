@@ -161,8 +161,6 @@ class create_track(commands.Cog):
 
             plot_map(TRAIN_DATA, TRACK_DATA, ERROR_ID)
 
-            print(ERROR_ID)
-
             text = "WARNING!\nCOLLISION DETECTED AT"
 
             for coord in coords:
