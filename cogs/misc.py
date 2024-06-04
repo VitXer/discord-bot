@@ -8,6 +8,69 @@ import discord
 deltime = 5
 
 
+flag_to_lang = {
+    '🇺🇸': 'en',  # Angielski
+    '🇫🇷': 'fr',  # Francuski
+    '🇪🇸': 'es',  # Hiszpański
+    '🇩🇪': 'de',  # Niemiecki
+    '🇮🇹': 'it',  # Włoski
+    '🇵🇱': 'pl',  # Polski
+    '🇷🇺': 'ru',  # Rosyjski
+    '🇯🇵': 'ja',  # Japoński
+    '🇨🇳': 'zh-cn',  # Chiński (uproszczony)
+    '🇰🇷': 'ko',  # Koreański
+    '🇧🇷': 'pt',  # Portugalski (Brazylijski)
+    '🇸🇪': 'sv',  # Szwedzki
+    '🇳🇱': 'nl',  # Niderlandzki
+    '🇮🇳': 'hi',  # Hindi
+    '🇹🇷': 'tr',  # Turecki
+    '🇬🇷': 'el',  # Grecki
+    '🇮🇱': 'he',  # Hebrajski
+    '🇸🇦': 'ar',  # Arabski
+    '🇺🇦': 'uk',  # Ukraiński
+    '🇭🇺': 'hu',  # Węgierski
+    '🇻🇳': 'vi',  # Wietnamski
+    '🇳🇴': 'no',  # Norweski
+    '🇩🇰': 'da',  # Duński
+    '🇫🇮': 'fi',  # Fiński
+    '🇨🇿': 'cs',  # Czeski
+    '🇸🇰': 'sk',  # Słowacki
+    '🇭🇷': 'hr',  # Chorwacki
+    '🇷🇴': 'ro',  # Rumuński
+    '🇧🇬': 'bg',  # Bułgarski
+    '🇮🇩': 'id',  # Indonezyjski
+    '🇲🇾': 'ms',  # Malajski
+    '🇹🇭': 'th',  # Tajski
+    '🇮🇸': 'is',  # Islandzki
+    '🇪🇪': 'et',  # Estoński
+    '🇱🇹': 'lt',  # Litewski
+    '🇱🇻': 'lv',  # Łotewski
+    '🇿🇦': 'af',  # Afrikaans
+    '🇪🇬': 'ar',  # Arabski (Egipt)
+    '🇵🇭': 'tl',  # Tagalog (Filipiny)
+    '🇲🇳': 'mn',  # Mongolski
+    '🇦🇲': 'hy',  # Ormiański
+    '🇬🇪': 'ka',  # Gruziński
+    '🇦🇿': 'az',  # Azerbejdżański
+    '🇰🇿': 'kk',  # Kazachski
+    '🇺🇿': 'uz',  # Uzbecki
+    '🇵🇰': 'ur',  # Urdu
+    '🇵🇪': 'es',  # Hiszpański (Peru)
+    '🇲🇽': 'es',  # Hiszpański (Meksyk)
+    '🇦🇷': 'es',  # Hiszpański (Argentyna)
+    '🇨🇴': 'es',  # Hiszpański (Kolumbia)
+    '🇨🇱': 'es',  # Hiszpański (Chile)
+    '🇪🇨': 'es',  # Hiszpański (Ekwador)
+    '🇻🇪': 'es',  # Hiszpański (Wenezuela)
+    '🇨🇺': 'es',  # Hiszpański (Kuba)
+    '🇩🇴': 'es',  # Hiszpański (Dominikana)
+    '🇬🇹': 'es',  # Hiszpański (Gwatemala)
+    '🇭🇳': 'es',  # Hiszpański (Honduras)
+    '🇳🇮': 'es',  # Hiszpański (Nikaragua)
+    '🇵🇾': 'es',  # Hiszpański (Paragwaj)
+    '🇺🇾': 'es',  # Hiszpański (Urugwaj)
+}
+
 class misc(commands.Cog):
 
     def __init__(self, client):
@@ -16,6 +79,21 @@ class misc(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('misc active')
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        if user.bot:
+            return
+
+        if reaction.emoji in flag_to_lang:
+
+            translator = Translator()
+
+            lang = flag_to_lang[reaction.emoji]
+            original_message = reaction.message.content
+            translated = translator.translate(original_message, dest=lang)
+            embed = discord.Embed(title=f'Translation (https://discord.com/channels/{reaction.message.guild.id}/{reaction.message.channel.id}/{reaction.message.id}) to ({lang}) by ({user})', description=translated.text, color=discord.Color.green())
+            await reaction.message.channel.send(embed=embed)
 
     @commands.slash_command(name="embed", description="Creates embed message.")
     @default_permissions(manage_messages=True)
